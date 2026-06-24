@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет - Школа будущего</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f8f9fa;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 1rem 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-logout {
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .profile-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .profile-sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            border: 3px solid #1e3c72;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #1e3c72;
+        }
+
+        .profile-role {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            background: #e3f2fd;
+            color: #1e3c72;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .profile-info {
+            text-align: left;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .info-item {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #555;
+        }
+
+        .profile-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .content-tabs {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 2px solid #eee;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 0.8rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            color: #666;
+        }
+
+        .tab-btn:hover {
+            color: #1e3c72;
+        }
+
+        .tab-btn.active {
+            color: #1e3c72;
+            border-bottom: 2px solid #1e3c72;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .course-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .enrollment-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+        }
+
+        .status-pending {
+            color: #f39c12;
+            font-weight: 500;
+        }
+
+        .status-approved {
+            color: #27ae60;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1e3c72;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-menu {
+                gap: 1rem;
+            }
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: #1e3c72;
+                padding: 2rem;
+            }
+            .nav-menu.active {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Школа Будущего</span>
+                </a>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="programs.html">Программы</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                    <li><button class="btn-logout" onclick="logoutUser('index.html')">
+                        <i class="fas fa-sign-out-alt"></i> Выйти
+                    </button></li>
+                </ul>
+                <div class="hamburger" onclick="document.getElementById('navMenu').classList.toggle('active')">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="profile-container" id="profileContainer">
+            <!-- Данные загружаются динамически -->
+        </div>
+    </main>
+
+    <script>
+        // Проверка авторизации
+        function checkAuth() {
+            const session = localStorage.getItem('currentSession') || sessionStorage.getItem('currentSession');
+            if (!session) {
+                localStorage.setItem('redirectAfterLogin', window.location.href);
+                window.location.href = 'login.html';
+                return null;
+            }
+            return JSON.parse(session);
+        }
+
+        function getRoleName(role) {
+            const roles = {
+                'student': 'Ученик',
+                'teacher': 'Учитель',
+                'parent': 'Родитель'
+            };
+            return roles[role] || 'Пользователь';
+        }
+
+        function switchTab(tab, event) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            if (event && event.target) {
+                event.target.classList.add('active');
+            } else {
+                document.querySelector(`.tab-btn[data-tab="${tab}"]`)?.classList.add('active');
+            }
+            
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(`${tab}-tab`).classList.add('active');
+        }
+
+        // Загрузка профиля
+        function loadProfile() {
+            const session = checkAuth();
+            if (!session) return;
+
+            const userData = session.userData;
+            const enrollments = JSON.parse(localStorage.getItem('enrollments') || '[]');
+            const userEnrollments = enrollments.filter(e => e.email === userData.email);
+
+            const profileHTML = `
+                <div class="profile-sidebar">
+                    <img src="${userData.avatar || 'https://ui-avatars.com/api/?background=1e3c72&color=fff&name=' + encodeURIComponent(userData.username)}" alt="Avatar" class="profile-avatar">
+                    <h2 class="profile-name">${userData.fullName || userData.username}</h2>
+                    <span class="profile-role">${getRoleName(userData.role)}</span>
+                    <div class="profile-info">
+                        <div class="info-item">
+                            <i class="fas fa-user"></i>
+                            <span>Логин: ${userData.username}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>Email: ${userData.email}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Регистрация: ${new Date(userData.registeredAt).toLocaleDateString()}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Последний вход: ${localStorage.getItem('lastLogin') ? new Date(localStorage.getItem('lastLogin')).toLocaleString() : 'сегодня'}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-content">
+                    <div class="content-tabs">
+                        <button class="tab-btn active" data-tab="courses" onclick="switchTab('courses', event)">Мои курсы</button>
+                        <button class="tab-btn" data-tab="enrollments" onclick="switchTab('enrollments', event)">Заявки на курсы</button>
+                        <button class="tab-btn" data-tab="settings" onclick="switchTab('settings', event)">Настройки</button>
+                    </div>
+                    
+                    <div id="courses-tab" class="tab-pane active">
+                        <h3>Мои курсы</h3>
+                        <div id="coursesList">
+                            <p style="text-align: center; color: #999; padding: 2rem 0;">У вас пока нет записанных курсов</p>
+                        </div>
+                    </div>
+                    
+                    <div id="enrollments-tab" class="tab-pane">
+                        <h3>Мои заявки</h3>
+                        <div id="enrollmentsList">
+                            ${userEnrollments.length === 0 ? 
+                                '<p style="text-align: center; color: #999; padding: 2rem 0;">У вас пока нет заявок</p>' :
+                                userEnrollments.map(e => `
+                                    <div class="enrollment-item">
+                                        <strong>${e.courseName}</strong><br>
+                                        Дата подачи: ${new Date(e.date).toLocaleDateString()}<br>
+                                        Статус: <span class="status-pending">На рассмотрении</span>
+                                    </div>
+                                `).join('')
+                            }
+                        </div>
+                    </div>
+                    
+                    <div id="settings-tab" class="tab-pane">
+                        <h3>Настройки профиля</h3>
+                        <form id="profileForm">
+                            <div class="form-group">
+                                <label>ФИО:</label>
+                                <input type="text" id="fullName" value="${userData.fullName || ''}">
+                            </div>
+                            <div class="form-group">
+                                <label>Email:</label>
+                                <input type="email" id="email" value="${userData.email}">
+                            </div>
+                            <button type="submit" class="btn-primary">Сохранить изменения</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('profileContainer').innerHTML = profileHTML;
+        }
+
+        // Сохранение настроек
+        document.addEventListener('submit', function(e) {
+            if (e.target.id === 'profileForm') {
+                e.preventDefault();
+                const session = checkAuth();
+                if (session) {
+                    const userData = session.userData;
+                    userData.fullName = document.getElementById('fullName').value;
+                    userData.email = document.getElementById('email').value;
+                    userData.avatar = `https://ui-avatars.com/api/?background=1e3c72&color=fff&name=${encodeURIComponent(userData.fullName)}`;
+                    
+                    localStorage.setItem('user_' + userData.username, JSON.stringify(userData));
+                    session.userData = userData;
+                    
+                    if (localStorage.getItem('currentSession')) {
+                        localStorage.setItem('currentSession', JSON.stringify(session));
+                    } else {
+                        sessionStorage.setItem('currentSession', JSON.stringify(session));
+                    }
+                    
+                    alert('Профиль обновлен!');
+                    loadProfile();
+                }
+            }
+        });
+
+        // Загрузка профиля при старте
+        loadProfile();
+    </script>
+    <script src="js/session.js"></script>
+</body>
+</html>

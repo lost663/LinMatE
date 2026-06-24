@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в систему - Школа будущего</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .nav-menu a:hover {
+            opacity: 0.8;
+        }
+
+        .page-content {
+            padding: 3rem 0;
+        }
+
+        .login-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+        }
+
+        .login-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .login-card h2 {
+            color: #1e3c72;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .login-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: #1e3c72;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-block {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .login-divider {
+            text-align: center;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .login-divider span {
+            background: white;
+            padding: 0 1rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .login-divider:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #ddd;
+            z-index: -1;
+        }
+
+        .user-types {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .user-type-btn {
+            padding: 0.8rem;
+            background: #f0f7ff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .user-type-btn:hover {
+            background: #1e3c72;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .user-type-btn.active {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .login-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .login-footer a {
+            color: #1e3c72;
+            text-decoration: none;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            z-index: 2500;
+            animation: slideIn 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .notification.success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .notification.error {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .notification.info {
+            background: #3498db;
+            color: white;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .user-types {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .forgot-password {
+            color: #1e3c72;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Школа Будущего</span>
+                </a>
+                
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+                    <li><a href="about.html"><i class="fas fa-school"></i> О школе</a></li>
+                    <li><a href="programs.html"><i class="fas fa-book-open"></i> Программы</a></li>
+                    <li><a href="team.html"><i class="fas fa-users"></i> Команда</a></li>
+                    <li><a href="news.html"><i class="fas fa-newspaper"></i> Новости</a></li>
+                    <li><a href="contacts.html"><i class="fas fa-address-book"></i> Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <div class="container">
+            <div class="login-container">
+                <!-- Окно регистрации -->
+                <div class="login-card">
+                    <h2><i class="fas fa-user-plus"></i> Регистрация</h2>
+                    <p>Зарегистрируйтесь для доступа к учебным материалам</p>
+                    
+                    <form id="registerForm" class="login-form">
+                        <div class="form-group">
+                            <label for="reg-username"><i class="fas fa-user"></i> Имя пользователя</label>
+                            <input type="text" id="reg-username" placeholder="Введите логин" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-email"><i class="fas fa-envelope"></i> Email</label>
+                            <input type="email" id="reg-email" placeholder="Введите email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-password"><i class="fas fa-key"></i> Пароль</label>
+                            <input type="password" id="reg-password" placeholder="Введите пароль" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-confirm-password"><i class="fas fa-check-circle"></i> Подтверждение пароля</label>
+                            <input type="password" id="reg-confirm-password" placeholder="Подтвердите пароль" required>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary btn-block">
+                            <i class="fas fa-user-plus"></i> Зарегистрироваться
+                        </button>
+                    </form>
+                    
+                    <div class="login-footer">
+                        <p>Уже есть аккаунт? <a href="#" onclick="switchToLogin()">Войти в систему</a></p>
+                        <p><a href="index.html"><i class="fas fa-arrow-left"></i> Вернуться на главную</a></p>
+                    </div>
+                </div>
+                
+                <!-- Окно авторизации -->
+                <!-- Окно авторизации -->
+<div class="login-card">
+    <h2><i class="fas fa-sign-in-alt"></i> Авторизация</h2>
+    <p>Войдите в свой аккаунт для доступа к учебным материалам</p>
+    
+    <form id="loginForm" class="login-form">
+        <div class="form-group">
+            <label for="login-username"><i class="fas fa-user"></i> Имя пользователя</label>
+            <input type="text" id="login-username" placeholder="Введите логин" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="login-password"><i class="fas fa-key"></i> Пароль</label>
+            <input type="password" id="login-password" placeholder="Введите пароль" required>
+        </div>
+        
+        <div class="form-options">
+            <label>
+                <input type="checkbox" id="rememberMe"> Запомнить меня
+            </label>
+            <a href="#" class="forgot-password">Забыли пароль?</a>
+        </div>
+        
+        <button type="submit" class="btn-primary btn-block">
+            <i class="fas fa-sign-in-alt"></i> Войти
+        </button>
+        
+        <div class="login-divider">
+            <span>или</span>
+        </div>
+        
+        <div class="user-types">
+            <button type="button" class="user-type-btn" onclick="setUserType('student')">
+                <i class="fas fa-user-graduate"></i>
+                <span>Ученик</span>
+            </button>
+            <button type="button" class="user-type-btn" onclick="setUserType('teacher')">
+                <i class="fas fa-chalkboard-user"></i>
+                <span>Учитель</span>
+            </button>
+            <button type="button" class="user-type-btn" onclick="setUserType('parent')">
+                <i class="fas fa-users"></i>
+                <span>Родитель</span>
+            </button>
+            <button type="button" class="user-type-btn" onclick="setUserType('admin')" style="border-color: #ff6b6b;">
+                <i class="fas fa-user-cog" style="color: #ff6b6b;"></i>
+                <span style="color: #ff6b6b;">Администратор</span>
+            </button>
+        </div>
+    </form>
+    
+    <div class="login-footer">
+        <p>Нет аккаунта? <a href="#" onclick="switchToRegister()">Зарегистрироваться</a></p>
+        <p><a href="index.html"><i class="fas fa-arrow-left"></i> Вернуться на главную</a></p>
+    </div>
+</div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Функции для переключения между формами
+        function switchToLogin() {
+            document.querySelector('.login-container').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('login-username').focus();
+        }
+        
+        function switchToRegister() {
+            document.querySelector('.login-container').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('reg-username').focus();
+        }
+        
+        // Функция для установки типа пользователя
+        function setUserType(type) {
+    const userTypes = {
+        'student': 'Ученик',
+        'teacher': 'Учитель', 
+        'parent': 'Родитель',
+        'admin': 'Администратор'  
+    };
+            
+            const buttons = document.querySelectorAll('.user-type-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            event.currentTarget.classList.add('active');
+            localStorage.setItem('selectedRole', type);
+            showNotification(`Выбран тип пользователя: ${userTypes[type]}`, 'info');
+        }
+        
+        // Функция для показа уведомлений
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        // Обработка формы регистрации
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('reg-username').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const confirmPassword = document.getElementById('reg-confirm-password').value;
+            
+            if (!username || !email || !password || !confirmPassword) {
+                showNotification('Пожалуйста, заполните все поля', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showNotification('Пароли не совпадают', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showNotification('Пароль должен содержать минимум 6 символов', 'error');
+                return;
+            }
+            
+            const existingUser = localStorage.getItem('user_' + username);
+            if (existingUser) {
+                showNotification('Пользователь с таким именем уже существует', 'error');
+                return;
+            }
+            
+            const userData = {
+                username: username,
+                email: email,
+                password: password,
+                role: localStorage.getItem('selectedRole') || 'student',
+                registeredAt: new Date().toISOString(),
+                fullName: username,
+                avatar: 'https://ui-avatars.com/api/?background=1e3c72&color=fff&name=' + encodeURIComponent(username)
+            };
+            
+            localStorage.setItem('user_' + username, JSON.stringify(userData));
+            showNotification('Регистрация успешна! Теперь вы можете войти в систему', 'success');
+            
+            this.reset();
+            
+            setTimeout(() => {
+                switchToLogin();
+            }, 2000);
+        });
+        
+        // Обработка формы авторизации
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+            
+            if (!username || !password) {
+                showNotification('Пожалуйста, введите логин и пароль', 'error');
+                return;
+            }
+            
+            const storedUser = localStorage.getItem('user_' + username);
+            
+            if (!storedUser) {
+                showNotification('Пользователь не найден. Пожалуйста, зарегистрируйтесь', 'error');
+                return;
+            }
+            
+            const userData = JSON.parse(storedUser);
+            
+            if (userData.password === password) {
+                const session = {
+                    username: username,
+                    userData: userData,
+                    loginTime: new Date().toISOString(),
+                    rememberMe: rememberMe
+                };
+                
+                if (rememberMe) {
+                    localStorage.setItem('currentSession', JSON.stringify(session));
+                } else {
+                    sessionStorage.setItem('currentSession', JSON.stringify(session));
+                }
+                
+                localStorage.setItem('currentUser', username);
+                localStorage.setItem('lastLogin', new Date().toISOString());
+                
+                showNotification(`Добро пожаловать, ${userData.fullName || username}!`, 'success');
+                this.reset();
+                
+                // Проверяем, есть ли страница для возврата
+                const redirectUrl = localStorage.getItem('redirectAfterLogin') || 'profile.html';
+                localStorage.removeItem('redirectAfterLogin');
+                
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 1500);
+            } else {
+                showNotification('Неверный пароль', 'error');
+            }
+        });
+        
+        // Проверка, есть ли уже активная сессия
+        function checkActiveSession() {
+            const session = localStorage.getItem('currentSession') || sessionStorage.getItem('currentSession');
+            if (session) {
+                const sessionData = JSON.parse(session);
+                // Если мы на странице логина, перенаправляем в профиль
+                if (window.location.pathname.includes('login.html')) {
+                    const redirectUrl = localStorage.getItem('redirectAfterLogin') || 'profile.html';
+                    localStorage.removeItem('redirectAfterLogin');
+                    showNotification(`С возвращением, ${sessionData.username}!`, 'success');
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 1500);
+                }
+            }
+        }
+        
+        // Запускаем проверку сессии при загрузке страницы
+        checkActiveSession();
+    </script>
+    <script src="js/session.js"></script>
+    <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: #f0f7ff; border-radius: 15px; border: 2px dashed #1e3c72; max-width: 500px; margin-left: auto; margin-right: auto;">
+        <p style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">
+            <i class="fas fa-info-circle" style="color: #1e3c72;"></i> 
+            <strong style="color: #1e3c72;">Тестовый администратор:</strong>
+        </p>
+        <p style="font-size: 1.1rem; color: #1e3c72; font-weight: bold; margin-bottom: 0.5rem;">
+            <span style="background: #1e3c72; color: white; padding: 0.2rem 1rem; border-radius: 5px;">admin</span>
+            <span style="color: #666; margin: 0 0.5rem;">/</span>
+            <span style="background: #1e3c72; color: white; padding: 0.2rem 1rem; border-radius: 5px;">admin123</span>
+        </p>
+        <button onclick="quickLoginAdmin()" style="margin-top: 0.5rem; padding: 0.6rem 2rem; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; border: none; border-radius: 50px; cursor: pointer; font-size: 1rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);">
+            <i class="fas fa-bolt"></i> Быстрый вход в админку
+        </button>
+        <p style="font-size: 0.8rem; color: #999; margin-top: 0.5rem;">
+            <i class="fas fa-shield-alt"></i> Только для тестирования
+        </p>
+    </div>
+
+    <script>
+    // ===== БЫСТРЫЙ ВХОД ДЛЯ АДМИНИСТРАТОРА =====
+    function quickLoginAdmin() {
+        // Создаем сессию для админа
+        const adminSession = {
+            username: 'admin',
+            userData: {
+                username: 'admin',
+                fullName: 'Главный Администратор',
+                email: 'admin@school256-fokino.ru',
+                role: 'admin',
+                avatar: 'https://ui-avatars.com/api/?background=1e3c72&color=fff&name=Admin',
+                registeredAt: new Date().toISOString()
+            },
+            loginTime: new Date().toISOString(),
+            rememberMe: true
+        };
+        
+        localStorage.setItem('currentSession', JSON.stringify(adminSession));
+        localStorage.setItem('currentUser', 'admin');
+        localStorage.setItem('lastLogin', new Date().toISOString());
+        
+        showNotification('✅ Вход выполнен как Администратор!', 'success');
+        
+        setTimeout(() => {
+            window.location.href = 'admin.html';
+        }, 1000);
+    }
+    </script>
+</body>
+</html>

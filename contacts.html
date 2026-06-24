@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты - Школа будущего №256</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS для карты -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .contact-info {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: #f0f7ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: #1e3c72;
+            font-size: 1.2rem;
+        }
+        
+        .contact-details h3 {
+            margin-bottom: 0.5rem;
+            color: #1e3c72;
+        }
+        
+        .contact-details p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .map-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        #school-map {
+            height: 400px;
+            width: 100%;
+            border-radius: 15px;
+        }
+        
+        .map-info {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 1rem;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        
+        .map-info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .departments {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .department-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        
+        .department-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .department-card h3 {
+            color: #1e3c72;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .department-contacts {
+            list-style: none;
+        }
+        
+        .department-contacts li {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+        }
+        
+        .working-hours {
+            margin: 2rem 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border-radius: 15px;
+        }
+        
+        .hours-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .day-schedule {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+        
+        .day-schedule h4 {
+            margin-bottom: 0.5rem;
+            color: #ffd700;
+        }
+        
+        @media (max-width: 768px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+            
+            #school-map {
+                height: 300px;
+            }
+        }
+        
+        .page-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #1e3c72;
+            text-align: center;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1e3c72;
+        }
+        
+        .form-checkbox {
+            margin: 1rem 0;
+        }
+        
+        .form-checkbox label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.3s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+        
+        .contact-form-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            opacity: 0.8;
+        }
+        
+        .nav-menu a.active {
+            font-weight: bold;
+            border-bottom: 2px solid white;
+        }
+        
+        .btn-login {
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+        
+        .page-content {
+            padding: 3rem 0;
+            background: #f8f9fa;
+            min-height: calc(100vh - 200px);
+        }
+        
+        .page-title {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #1e3c72;
+            text-align: center;
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 1rem;
+        }
+        
+        .footer-column p {
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Школа Будущего №256</span>
+                </a>
+                
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+                    <li><a href="about.html"><i class="fas fa-school"></i> О школе</a></li>
+                    <li><a href="programs.html"><i class="fas fa-book-open"></i> Программы</a></li>
+                    <li><a href="team.html"><i class="fas fa-users"></i> Команда</a></li>
+                    <li><a href="news.html"><i class="fas fa-newspaper"></i> Новости</a></li>
+                    <li><a href="contacts.html" class="active"><i class="fas fa-address-book"></i> Контакты</a></li>
+                    <li><a href="login.html" class="btn-login" id="loginNavBtn"><i class="fas fa-sign-in-alt"></i> Вход</a></li>
+                </ul>
+                
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <div class="container">
+            <h1 class="page-title">Контакты</h1>
+            <p class="page-subtitle">МБОУ СОШ №256 "Школа Будущего", ЗАТО Фокино</p>
+            
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h2 style="margin-bottom: 2rem; color: #1e3c72;">Наши контакты</h2>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>Адрес</h3>
+                            <p>
+                                <strong>МБОУ СОШ №256 «Школа Будущего»</strong><br>
+                                Приморский край, ЗАТО Фокино<br>
+                                ул. Школьная, д. 15<br>
+                                Индекс: 692880
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>Телефоны</h3>
+                            <p>
+                                <strong>Приемная:</strong> +7 (423) 123-45-67<br>
+                                <strong>Приемная комиссия:</strong> +7 (423) 123-45-68<br>
+                                <strong>Бухгалтерия:</strong> +7 (423) 123-45-69<br>
+                                <strong>Факс:</strong> +7 (423) 123-45-70
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>Электронная почта</h3>
+                            <p>
+                                <strong>Общие вопросы:</strong> info@school256-fokino.ru<br>
+                                <strong>Приемная комиссия:</strong> admission@school256-fokino.ru<br>
+                                <strong>Техподдержка:</strong> support@school256-fokino.ru
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>Режим работы</h3>
+                            <p>
+                                <strong>Пн-Пт:</strong> 8:00 - 19:00<br>
+                                <strong>Сб:</strong> 9:00 - 15:00<br>
+                                <strong>Вс:</strong> выходной<br>
+                                <strong>Приемная комиссия:</strong> Пн-Пт 9:00 - 17:00
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="map-container">
+                    <div id="school-map"></div>
+                    <div class="map-info">
+                        <div class="map-info-item">
+                            <i class="fas fa-bus"></i>
+                            <span>Остановка "Школа": автобусы №1, 2, 3, 5</span>
+                        </div>
+                        <div class="map-info-item">
+                            <i class="fas fa-car"></i>
+                            <span>Парковка: 50 мест</span>
+                        </div>
+                        <div class="map-info-item">
+                            <i class="fas fa-wheelchair"></i>
+                            <span>Доступная среда</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="working-hours">
+                <h3 style="text-align: center; margin-bottom: 1rem;"><i class="fas fa-calendar-alt"></i> График работы отделов</h3>
+                <div class="hours-grid">
+                    <div class="day-schedule">
+                        <h4>Понедельник - Четверг</h4>
+                        <p>8:00 - 17:00</p>
+                        <small>Обед: 12:00 - 13:00</small>
+                    </div>
+                    <div class="day-schedule">
+                        <h4>Пятница</h4>
+                        <p>8:00 - 16:00</p>
+                        <small>Обед: 12:00 - 13:00</small>
+                    </div>
+                    <div class="day-schedule">
+                        <h4>Суббота</h4>
+                        <p>9:00 - 14:00</p>
+                        <small>Приемная комиссия</small>
+                    </div>
+                </div>
+            </div>
+            
+            <section class="departments">
+                <h2 style="grid-column: 1 / -1; color: #1e3c72; text-align: center;">Отделы и подразделения</h2>
+                
+                <div class="department-card">
+                    <h3><i class="fas fa-user-tie"></i> Администрация</h3>
+                    <ul class="department-contacts">
+                        <li><i class="fas fa-user"></i> <strong>Иванова Мария Сергеевна</strong> - Директор</li>
+                        <li><i class="fas fa-phone"></i> +7 (423) 123-45-71</li>
+                        <li><i class="fas fa-envelope"></i> director@school256-fokino.ru</li>
+                        <li><i class="fas fa-door-open"></i> Кабинет 101, 1 этаж</li>
+                        <li><i class="fas fa-clock"></i> Прием: Вт, Чт 14:00-17:00</li>
+                    </ul>
+                </div>
+                
+                <div class="department-card">
+                    <h3><i class="fas fa-graduation-cap"></i> Учебная часть</h3>
+                    <ul class="department-contacts">
+                        <li><i class="fas fa-user"></i> <strong>Петров Алексей Владимирович</strong> - Завуч</li>
+                        <li><i class="fas fa-phone"></i> +7 (423) 123-45-72</li>
+                        <li><i class="fas fa-envelope"></i> study@school256-fokino.ru</li>
+                        <li><i class="fas fa-door-open"></i> Кабинет 205, 2 этаж</li>
+                    </ul>
+                </div>
+                
+                <div class="department-card">
+                    <h3><i class="fas fa-user-friends"></i> Приемная комиссия</h3>
+                    <ul class="department-contacts">
+                        <li><i class="fas fa-user"></i> <strong>Сидорова Елена Дмитриевна</strong></li>
+                        <li><i class="fas fa-phone"></i> +7 (423) 123-45-68</li>
+                        <li><i class="fas fa-envelope"></i> admission@school256-fokino.ru</li>
+                        <li><i class="fas fa-door-open"></i> Кабинет 102, 1 этаж</li>
+                    </ul>
+                </div>
+                
+                <div class="department-card">
+                    <h3><i class="fas fa-book"></i> Методический отдел</h3>
+                    <ul class="department-contacts">
+                        <li><i class="fas fa-user"></i> <strong>Ковалев Дмитрий Игоревич</strong></li>
+                        <li><i class="fas fa-phone"></i> +7 (423) 123-45-73</li>
+                        <li><i class="fas fa-envelope"></i> method@school256-fokino.ru</li>
+                        <li><i class="fas fa-door-open"></i> Кабинет 306, 3 этаж</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <section class="contact-form-section">
+                <h2 class="section-title">Напишите нам</h2>
+                <form id="contactPageForm" class="contact-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" placeholder="Ваше имя" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="Email" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="Тема обращения" required>
+                    </div>
+                    <div class="form-group">
+                        <select required>
+                            <option value="" disabled selected>Выберите отдел</option>
+                            <option value="admin">Администрация</option>
+                            <option value="admission">Приемная комиссия</option>
+                            <option value="study">Учебная часть</option>
+                            <option value="method">Методический отдел</option>
+                            <option value="support">Техническая поддержка</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea placeholder="Ваше сообщение" rows="6" required></textarea>
+                    </div>
+                    <div class="form-checkbox">
+                        <label>
+                            <input type="checkbox" required>
+                            Я согласен на обработку персональных данных
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-primary">Отправить сообщение</button>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>МБОУ СОШ №256</h3>
+                    <p>"Школа Будущего"</p>
+                    <p>ЗАТО Фокино, Приморский край</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Контакты</h3>
+                    <p><i class="fas fa-phone"></i> +7 (423) 123-45-67</p>
+                    <p><i class="fas fa-envelope"></i> info@school256-fokino.ru</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Режим работы</h3>
+                    <p>Пн-Пт: 8:00 - 19:00</p>
+                    <p>Сб: 9:00 - 15:00</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // Координаты школы №256 в городе Фокино
+        const schoolCoordinates = [42.9744, 132.4053];
+        
+        // Инициализация карты
+        const map = L.map('school-map').setView(schoolCoordinates, 16);
+        
+        // Добавление слоя карты (OpenStreetMap)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 19,
+            minZoom: 10
+        }).addTo(map);
+        
+        // Кастомная иконка для школы
+        const schoolIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: '<div style="background-color: #1e3c72; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 3px solid white;"><i class="fas fa-school" style="color: white; font-size: 20px;"></i></div>',
+            iconSize: [40, 40],
+            popupAnchor: [0, -20]
+        });
+        
+        // Маркер школы
+        const marker = L.marker(schoolCoordinates, { icon: schoolIcon }).addTo(map);
+        
+        // Всплывающее окно при клике на маркер
+        marker.bindPopup(`
+            <div style="text-align: center; min-width: 200px;">
+                <strong style="color: #1e3c72; font-size: 16px;">МБОУ СОШ №256</strong><br>
+                <span style="color: #666;">"Школа Будущего"</span><br>
+                <span style="color: #666;">г. Фокино, ул. Школьная, 15</span><br>
+                <button onclick="getDirections()" style="margin-top: 10px; background: #1e3c72; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer;">
+                    <i class="fas fa-directions"></i> Построить маршрут
+                </button>
+            </div>
+        `).openPopup();
+        
+        // Добавление круга радиуса 500м вокруг школы
+        const circle = L.circle(schoolCoordinates, {
+            color: '#1e3c72',
+            fillColor: '#1e3c72',
+            fillOpacity: 0.1,
+            radius: 500
+        }).addTo(map);
+        
+        // Функция построения маршрута
+        function getDirections() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+                    const url = `https://www.openstreetmap.org/directions?engine=osrm_car&route=${userLat},${userLng}&to=${schoolCoordinates[0]},${schoolCoordinates[1]}`;
+                    window.open(url, '_blank');
+                }, function() {
+                    const url = `https://www.openstreetmap.org/directions?engine=osrm_car&route=42.9744,132.4053&to=${schoolCoordinates[0]},${schoolCoordinates[1]}`;
+                    window.open(url, '_blank');
+                    alert('Для построения маршрута от вашего местоположения, пожалуйста, разрешите доступ к геолокации');
+                });
+            } else {
+                alert('Ваш браузер не поддерживает геолокацию');
+            }
+        }
+        
+        // Обработка формы на странице контактов
+        const contactPageForm = document.getElementById('contactPageForm');
+        if (contactPageForm) {
+            contactPageForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const requiredFields = this.querySelectorAll('[required]');
+                let isValid = true;
+                
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        isValid = false;
+                        field.style.borderColor = '#e74c3c';
+                    } else {
+                        field.style.borderColor = '#ddd';
+                    }
+                    
+                    if (field.type === 'checkbox' && !field.checked) {
+                        isValid = false;
+                        field.style.outline = '2px solid #e74c3c';
+                    }
+                });
+                
+                if (isValid) {
+                    alert('Сообщение отправлено! Мы ответим вам в течение 24 часов.');
+                    this.reset();
+                    
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-check"></i> Отправлено!';
+                    submitBtn.style.background = '#27ae60';
+                    
+                    setTimeout(() => {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.style.background = '';
+                    }, 2000);
+                } else {
+                    alert('Пожалуйста, заполните все обязательные поля и согласитесь с условиями.');
+                }
+            });
+        }
+        
+        // Добавляем стили для карты
+        const style = document.createElement('style');
+        style.textContent = `
+            .custom-div-icon i {
+                text-shadow: 0 0 2px rgba(0,0,0,0.3);
+            }
+            .leaflet-popup-content-wrapper {
+                border-radius: 10px;
+            }
+            .leaflet-popup-content {
+                margin: 10px;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+    <script src="js/session.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>

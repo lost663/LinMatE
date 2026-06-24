@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Программы обучения - Школа будущего</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            opacity: 0.8;
+        }
+        
+        .btn-login {
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+        
+        .page-content {
+            padding: 3rem 0;
+            background: #f8f9fa;
+            min-height: calc(100vh - 200px);
+        }
+        
+        .page-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #1e3c72;
+            text-align: center;
+        }
+        
+        .programs-tabs {
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .tab-button {
+            padding: 0.8rem 1.5rem;
+            background: #f0f7ff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .tab-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .tab-button.active {
+            background: #1e3c72;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .program-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .program-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Стили для изображения курса */
+        .program-card-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: #1e3c72;
+        }
+        
+        .program-card-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 1.5rem;
+        }
+        
+        .program-card-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .program-card-price {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .program-card-price small {
+            font-size: 0.9rem;
+        }
+        
+        .program-card-body {
+            padding: 1.5rem;
+        }
+        
+        .program-features {
+            list-style: none;
+            margin: 1rem 0;
+        }
+        
+        .program-features li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .program-features i {
+            color: #27ae60;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1e3c72;
+        }
+        
+        /* Корзина */
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -12px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+        
+        .cart-sidebar {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100%;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            z-index: 1500;
+            transition: right 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .cart-sidebar.active {
+            right: 0;
+        }
+        
+        .cart-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cart-body {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-item-info h4 {
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .cart-item-price {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .remove-item {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.6rem;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .cart-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .cart-total {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            z-index: 2500;
+            animation: slideIn 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .notification.success {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .notification.error {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .notification.info {
+            background: #3498db;
+            color: white;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @media (max-width: 768px) {
+            .programs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Школа Будущего</span>
+                </a>
+                
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+                    <li><a href="about.html"><i class="fas fa-school"></i> О школе</a></li>
+                    <li><a href="programs.html" class="active"><i class="fas fa-book-open"></i> Программы</a></li>
+                    <li><a href="team.html"><i class="fas fa-users"></i> Команда</a></li>
+                    <li><a href="news.html"><i class="fas fa-newspaper"></i> Новости</a></li>
+                    <li><a href="contacts.html"><i class="fas fa-address-book"></i> Контакты</a></li>
+                    <li><a href="login.html" class="btn-login" id="loginNavBtn"><i class="fas fa-sign-in-alt"></i> Вход</a></li>
+                </ul>
+                
+                <div class="cart-icon" onclick="toggleCart()">
+                    <i class="fas fa-shopping-cart fa-lg"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <div class="container">
+            <h1 class="page-title">Программы обучения</h1>
+            
+            <div class="programs-tabs">
+                <div class="tab-buttons">
+                    <button class="tab-button active" data-tab="all">Все программы</button>
+                    <button class="tab-button" data-tab="primary">Начальная школа</button>
+                    <button class="tab-button" data-tab="middle">Основная школа</button>
+                    <button class="tab-button" data-tab="high">Старшая школа</button>
+                    <button class="tab-button" data-tab="robotics">Робототехника</button>
+                    <button class="tab-button" data-tab="programming">Программирование</button>
+                    <button class="tab-button" data-tab="languages">Иностранные языки</button>
+                </div>
+            </div>
+            
+            <div id="all" class="tab-content active">
+                <div class="programs-grid" id="programsGrid"></div>
+            </div>
+            
+            <div id="primary" class="tab-content">
+                <div class="programs-grid" id="primaryGrid"></div>
+            </div>
+            
+            <div id="middle" class="tab-content">
+                <div class="programs-grid" id="middleGrid"></div>
+            </div>
+            
+            <div id="high" class="tab-content">
+                <div class="programs-grid" id="highGrid"></div>
+            </div>
+            
+            <div id="robotics" class="tab-content">
+                <div class="programs-grid" id="roboticsGrid"></div>
+            </div>
+            
+            <div id="programming" class="tab-content">
+                <div class="programs-grid" id="programmingGrid"></div>
+            </div>
+            
+            <div id="languages" class="tab-content">
+                <div class="programs-grid" id="languagesGrid"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Модальное окно записи -->
+    <div class="modal" id="enrollmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Запись на курс</h3>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="enrollmentForm">
+                    <input type="hidden" id="courseId" name="courseId">
+                    <input type="hidden" id="courseName" name="courseName">
+                    <input type="hidden" id="coursePrice" name="coursePrice">
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> ФИО ученика *</label>
+                        <input type="text" id="studentName" required placeholder="Иванов Иван Иванович">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> Дата рождения *</label>
+                        <input type="date" id="birthDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> Телефон родителя *</label>
+                        <input type="tel" id="phone" required placeholder="+7 (XXX) XXX-XX-XX">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email *</label>
+                        <input type="email" id="email" required placeholder="parent@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-week"></i> Желаемая группа</label>
+                        <select id="group">
+                            <option value="">Выберите группу</option>
+                            <option>Утро (10:00-12:00)</option>
+                            <option>День (14:00-16:00)</option>
+                            <option>Вечер (17:00-19:00)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-comment"></i> Дополнительная информация</label>
+                        <textarea id="comment" rows="3" placeholder="Особые пожелания, медицинские противопоказания и т.д."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary" style="width: 100%">
+                        <i class="fas fa-check-circle"></i> Отправить заявку
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Корзина -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> Корзина</h3>
+            <button class="close-modal" onclick="toggleCart()">&times;</button>
+        </div>
+        <div class="cart-body" id="cartItems">
+            <p style="text-align: center; color: #999;">Корзина пуста</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">Итого: <span id="cartTotal">0</span> ₽</div>
+            <button class="btn-primary" style="width: 100%" onclick="checkout()">
+                <i class="fas fa-credit-card"></i> Оформить запись
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Данные курсов с картинками (добавлено поле img)
+        const courses = [
+            { id: 1, name: "Робототехника и ИИ", category: "robotics", price: 5000, age: "7-16 лет", duration: "1-3 года", features: ["LEGO Mindstorms", "Arduino", "Соревнования"], img: "img/lin15.jpg" },
+            { id: 2, name: "Программирование Python", category: "programming", price: 4500, age: "10-16 лет", duration: "1 год", features: ["Python", "Создание игр", "Веб-разработка"], img: "img/lin16.jpg" },
+            { id: 3, name: "Английский язык", category: "languages", price: 4000, age: "7-16 лет", duration: "1 год", features: ["Разговорный клуб", "Международные экзамены", "Носители языка"], img: "img/lin17.jpg" },
+            { id: 4, name: "Математика (углубленная)", category: "middle", price: 4500, age: "11-14 лет", duration: "1 год", features: ["Олимпиадная подготовка", "Проекты", "Научные конференции"], img: "img/lin18.jpg" },
+            { id: 5, name: "Подготовка к ЕГЭ", category: "high", price: 6000, age: "15-17 лет", duration: "1 год", features: ["Интенсив", "Пробные экзамены", "Индивидуальный план"], img: "img/lin19.jpg" },
+            { id: 6, name: "Китайский язык", category: "languages", price: 4500, age: "10-16 лет", duration: "1 год", features: ["Иероглифика", "Культура Китая", "Разговорная практика"], img: "img/lin20.png" },
+            { id: 7, name: "Web-разработка", category: "programming", price: 5000, age: "12-16 лет", duration: "9 месяцев", features: ["HTML/CSS", "JavaScript", "React"], img: "img/lin21.jpg" },
+            { id: 8, name: "Основы программирования", category: "primary", price: 3500, age: "7-10 лет", duration: "1 год", features: ["Scratch", "Логика", "Игры"], img: "img/lin22.jpg" }
+        ];
+        
+        // Корзина
+        let cart = JSON.parse(localStorage.getItem('courseCart') || '[]');
+        
+        // Функции корзины
+        function updateCartDisplay() {
+            const cartCount = document.getElementById('cartCount');
+            const cartTotal = document.getElementById('cartTotal');
+            const cartItemsContainer = document.getElementById('cartItems');
+            
+            cartCount.textContent = cart.length;
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p style="text-align: center; color: #999;">Корзина пуста</p>';
+                cartTotal.textContent = '0';
+                return;
+            }
+            
+            let total = 0;
+            cartItemsContainer.innerHTML = '';
+            
+            cart.forEach((item, index) => {
+                total += item.price;
+                cartItemsContainer.innerHTML += `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <h4>${item.name}</h4>
+                            <div class="cart-item-price">${item.price} ₽/мес</div>
+                            <small>${item.age} • ${item.duration}</small>
+                        </div>
+                        <button class="remove-item" onclick="removeFromCart(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+            });
+            
+            cartTotal.textContent = total;
+            localStorage.setItem('courseCart', JSON.stringify(cart));
+        }
+        
+        function addToCart(course) {
+            if (cart.some(item => item.id === course.id)) {
+                showNotification('Этот курс уже добавлен в корзину', 'info');
+                return;
+            }
+            
+            cart.push(course);
+            updateCartDisplay();
+            showNotification(`${course.name} добавлен в корзину`, 'success');
+            toggleCart();
+        }
+        
+        function removeFromCart(index) {
+            const removed = cart.splice(index, 1)[0];
+            updateCartDisplay();
+            showNotification(`${removed.name} удален из корзины`, 'info');
+        }
+        
+        function toggleCart() {
+            document.getElementById('cartSidebar').classList.toggle('active');
+        }
+        
+        function checkout() {
+            if (cart.length === 0) {
+                showNotification('Корзина пуста', 'error');
+                return;
+            }
+            
+            // Проверяем авторизацию
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                showNotification('Пожалуйста, войдите в систему для оформления записи', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                return;
+            }
+            
+            // Открываем форму записи для первого курса в корзине
+            openEnrollmentModal(cart[0]);
+        }
+        
+        // Отображение курсов (обновлено с добавлением картинки)
+        function renderCourses(coursesToRender, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            if (coursesToRender.length === 0) {
+                container.innerHTML = '<p style="text-align: center;">Нет доступных курсов</p>';
+                return;
+            }
+            
+            container.innerHTML = coursesToRender.map(course => `
+                <div class="program-card">
+                    <img class="program-card-img" src="${course.img}" alt="${course.name}" onerror="this.src='https://placehold.co/600x400/1e3c72/white?text=Курс'">
+                    <div class="program-card-header">
+                        <h3>${course.name}</h3>
+                        <div class="program-card-price">${course.price} ₽<small>/мес</small></div>
+                    </div>
+                    <div class="program-card-body">
+                        <ul class="program-features">
+                            <li><i class="fas fa-child"></i> Возраст: ${course.age}</li>
+                            <li><i class="fas fa-clock"></i> Длительность: ${course.duration}</li>
+                            ${course.features.map(f => `<li><i class="fas fa-check-circle"></i> ${f}</li>`).join('')}
+                        </ul>
+                        <button onclick='addToCart(${JSON.stringify(course)})' class="btn-primary" style="width: 100%">
+                            <i class="fas fa-cart-plus"></i> Записаться
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Модальное окно
+        let currentCourse = null;
+        
+        function openEnrollmentModal(course) {
+            currentCourse = course;
+            document.getElementById('courseId').value = course.id;
+            document.getElementById('courseName').value = course.name;
+            document.getElementById('coursePrice').value = course.price;
+            document.getElementById('enrollmentModal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('enrollmentModal').classList.remove('active');
+            document.getElementById('enrollmentForm').reset();
+        }
+        
+        // Обработка формы записи
+        document.getElementById('enrollmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const enrollment = {
+                courseId: document.getElementById('courseId').value,
+                courseName: document.getElementById('courseName').value,
+                coursePrice: document.getElementById('coursePrice').value,
+                studentName: document.getElementById('studentName').value,
+                birthDate: document.getElementById('birthDate').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                group: document.getElementById('group').value,
+                comment: document.getElementById('comment').value,
+                date: new Date().toISOString(),
+                status: 'pending'
+            };
+            
+            // Сохраняем заявку
+            let enrollments = JSON.parse(localStorage.getItem('enrollments') || '[]');
+            enrollments.push(enrollment);
+            localStorage.setItem('enrollments', JSON.stringify(enrollments));
+            
+            // Очищаем корзину
+            cart = [];
+            updateCartDisplay();
+            
+            showNotification(`Заявка на курс "${enrollment.courseName}" отправлена!`, 'success');
+            closeModal();
+            
+            // Перенаправление через 2 секунды
+            setTimeout(() => {
+                window.location.href = 'profile.html';
+            }, 2000);
+        });
+        
+        // Управление табами
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Показать уведомление
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i> ${message}`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.remove(), 3000);
+        }
+        
+        // Инициализация
+        function init() {
+            renderCourses(courses, 'programsGrid');
+            renderCourses(courses.filter(c => c.category === 'primary'), 'primaryGrid');
+            renderCourses(courses.filter(c => c.category === 'middle'), 'middleGrid');
+            renderCourses(courses.filter(c => c.category === 'high'), 'highGrid');
+            renderCourses(courses.filter(c => c.category === 'robotics'), 'roboticsGrid');
+            renderCourses(courses.filter(c => c.category === 'programming'), 'programmingGrid');
+            renderCourses(courses.filter(c => c.category === 'languages'), 'languagesGrid');
+            updateCartDisplay();
+        }
+        
+        init();
+    </script>
+    <script src="js/session.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Команда - Школа будущего</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        .team-filters {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .filter-button {
+            padding: 0.5rem 1.5rem;
+            margin: 0 0.5rem 0.5rem 0;
+            background: #f0f7ff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-button.active,
+        .filter-button:hover {
+            background: #1e3c72;
+            color: white;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .team-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .team-photo {
+            width: 100%;
+            height: 280px;
+            background: #f0f7ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .team-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .team-info {
+            padding: 1.5rem;
+        }
+        
+        .team-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 0.5rem;
+        }
+        
+        .team-position {
+            color: #ff6b6b;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .team-description {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+        
+        .team-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .skill-tag {
+            background: #f0f7ff;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+        }
+        
+        .team-contact {
+            display: flex;
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .team-contact a {
+            color: #666;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .team-contact a:hover {
+            color: #1e3c72;
+        }
+        
+        .team-stats {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 3rem 0;
+            margin: 3rem 0;
+            text-align: center;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .team-stat {
+            padding: 1rem;
+        }
+        
+        .team-stat h3 {
+            font-size: 2.5rem;
+            color: #ffd700;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Школа Будущего</span>
+                </a>
+                
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+                    <li><a href="about.html"><i class="fas fa-school"></i> О школе</a></li>
+                    <li><a href="programs.html"><i class="fas fa-book-open"></i> Программы</a></li>
+                    <li><a href="team.html" class="active"><i class="fas fa-users"></i> Команда</a></li>
+                    <li><a href="news.html"><i class="fas fa-newspaper"></i> Новости</a></li>
+                    <li><a href="contacts.html"><i class="fas fa-address-book"></i> Контакты</a></li>
+                    <li><a href="login.html" class="btn-login" id="loginNavBtn"><i class="fas fa-sign-in-alt"></i> Вход</a></li>
+                </ul>
+                
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <div class="container">
+            <h1 class="page-title">Наша команда</h1>
+            <p class="page-subtitle">Профессиональные преподаватели и специалисты, которые помогут раскрыть потенциал каждого ребенка</p>
+            
+            <div class="team-grid">
+                <div class="team-card" data-category="administration">
+                    <div class="team-photo">
+                        <img src="img/lin7.jpg" alt="Иванова Мария Сергеевна">
+                    </div>
+                    <div class="team-info">
+                        <h3 class="team-name">Иванова Мария Сергеевна</h3>
+                        <p class="team-position">Директор школы</p>
+                        <div class="team-description">
+                            Кандидат педагогических наук, автор методик инновационного образования. 
+                            15 лет опыта работы в образовательных учреждениях.
+                        </div>
+                        <div class="team-skills">
+                            <span class="skill-tag">Управление</span>
+                            <span class="skill-tag">Методика</span>
+                            <span class="skill-tag">Инновации</span>
+                        </div>
+                        <div class="team-contact">
+                            <a href="mailto:m.ivanova@school-future.ru">
+                                <i class="fas fa-envelope"></i> Email
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-card" data-category="teachers,robotics">
+                    <div class="team-photo">
+                        <img src="img/lin8.jpg" alt="Петров Алексей Викторович">
+                    </div>
+                    <div class="team-info">
+                        <h3 class="team-name">Петров Алексей Викторович</h3>
+                        <p class="team-position">Преподаватель робототехники</p>
+                        <div class="team-description">
+                            Инженер-программист, победитель всероссийских конкурсов по робототехнике.
+                            Автор курса "Роботы будущего" для детей 7-16 лет.
+                        </div>
+                        <div class="team-skills">
+                            <span class="skill-tag">Arduino</span>
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">LEGO Mindstorms</span>
+                            <span class="skill-tag">ИИ</span>
+                        </div>
+                        <div class="team-contact">
+                            <a href="#">
+                                <i class="fas fa-envelope"></i> Email
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-card" data-category="teachers,programming">
+                    <div class="team-photo">
+                        <img src="img/lin9.jpg" alt="Сидорова Елена Дмитриевна">
+                    </div>
+                    <div class="team-info">
+                        <h3 class="team-name">Сидорова Елена Дмитриевна</h3>
+                        <p class="team-position">Преподаватель программирования</p>
+                        <div class="team-description">
+                            Веб-разработчик с 8-летним опытом. Специализируется на обучении детей 
+                            программированию через создание игр и приложений.
+                        </div>
+                        <div class="team-skills">
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">Scratch</span>
+                            <span class="skill-tag">Разработка игр</span>
+                        </div>
+                        <div class="team-contact">
+                            <a href="#">
+                                <i class="fas fa-envelope"></i> Email
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-card" data-category="teachers,languages">
+                    <div class="team-photo">
+                        <img src="img/lin10.avif" alt="Ковалев Дмитрий Игоревич">
+                    </div>
+                    <div class="team-info">
+                        <h3 class="team-name">Ковалев Дмитрий Игоревич</h3>
+                        <p class="team-position">Преподаватель английского языка</p>
+                        <div class="team-description">
+                            Носитель языка из Великобритании. Опыт преподавания - 12 лет. 
+                            Специализируется на подготовке к международным экзаменам.
+                        </div>
+                        <div class="team-skills">
+                            <span class="skill-tag">IELTS</span>
+                            <span class="skill-tag">TOEFL</span>
+                            <span class="skill-tag">Разговорный английский</span>
+                        </div>
+                        <div class="team-contact">
+                            <a href="#">
+                                <i class="fas fa-envelope"></i> Email
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-card" data-category="teachers,art">
+                    <div class="team-photo">
+                        <img src="img/lin11.jpg" alt="Морозова Анна Петровна">
+                    </div>
+                    <div class="team-info">
+                        <h3 class="team-name">Морозова Анна Петровна</h3>
+                        <p class="team-position">Преподаватель арт-студии</p>
+                        <div class="team-description">
+                            Художник-иллюстратор, член Союза художников России. 
+                            Проводит мастер-классы по цифровому и традиционному искусству.
+                        </div>
+                        <div class="team-skills">
+                            <span class="skill-tag">Рисование</span>
+                            <span class="skill-tag">Дизайн</span>
+                            <span class="skill-tag">Цифровое искусство</span>
+                        </div>
+                        <div class="team-contact">
+                            <a href="#">
+                                <i class="fas fa-envelope"></i> Email
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-stats">
+                <div class="stats-container">
+                    <div class="team-stat">
+                        <h3>52</h3>
+                        <p>Преподавателя</p>
+                    </div>
+                    <div class="team-stat">
+                        <h3>85%</h3>
+                        <p>С высшим образованием</p>
+                    </div>
+                    <div class="team-stat">
+                        <h3>12</h3>
+                        <p>Кандидатов наук</p>
+                    </div>
+                    <div class="team-stat">
+                        <h3>98%</h3>
+                        <p>Довольных родителей</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Школа Будущего</h3>
+                    <p>МБОУ СОШ №256, ЗАТО Фокино</p>
+                    <p>ООО "Школа Будущего"</p>
+                    <p>Лицензия на образовательную деятельность №12345</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Контакты</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> г. Фокино, ул. Школьная, 15</p>
+                    <p><i class="fas fa-phone"></i> +7 (423) 123-45-67</p>
+                    <p><i class="fas fa-envelope"></i> info@school-future.ru</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Быстрые ссылки</h3>
+                    <ul>
+                        <li><a href="about.html">О школе</a></li>
+                        <li><a href="programs.html">Программы</a></li>
+                        <li><a href="news.html">Новости</a></li>
+                        <li><a href="contacts.html">Контакты</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Социальные сети</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-vk"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                    <p class="copyright">© 2024 Школа Будущего. Все права защищены.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Фильтрация команды (если нужна)
+        // Анимация появления карточек
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+        
+        document.querySelectorAll('.team-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observer.observe(card);
+        });
+    </script>
+    <script src="js/session.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>

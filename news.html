@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новости - Школа будущего</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        .news-categories {
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .category-button {
+            padding: 0.5rem 1.5rem;
+            background: #f0f7ff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .category-button.active,
+        .category-button:hover {
+            background: #1e3c72;
+            color: white;
+        }
+        
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+        
+        .news-image {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+        }
+        .news-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        .news-card:hover .news-image img {
+            transform: scale(1.05);
+        }
+        
+        .news-content {
+            padding: 1.5rem;
+        }
+        
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .news-category {
+            background: #ff6b6b;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+        }
+        
+        .news-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+        
+        .news-excerpt {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .news-read-more {
+            color: #1e3c72;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: gap 0.3s;
+        }
+        
+        .news-read-more:hover {
+            gap: 10px;
+        }
+        
+        .calendar-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 3rem;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #eee;
+        }
+        
+        .calendar-day {
+            background: white;
+            padding: 1rem;
+            text-align: center;
+            min-height: 80px;
+        }
+        
+        .calendar-day.weekend {
+            background: #f9f9f9;
+        }
+        
+        .calendar-day.event {
+            background: #f0f7ff;
+            position: relative;
+        }
+        
+        .calendar-day.event:after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 8px;
+            height: 8px;
+            background: #ff6b6b;
+            border-radius: 50%;
+        }
+        
+        .day-number {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .event-item {
+            font-size: 0.8rem;
+            color: #1e3c72;
+            margin-bottom: 0.3rem;
+            padding: 0.2rem 0.4rem;
+            background: rgba(30, 60, 114, 0.1);
+            border-radius: 3px;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
+        }
+        
+        .page-button {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .page-button.active {
+            background: #1e3c72;
+            color: white;
+            border-color: #1e3c72;
+        }
+        
+        .page-button:hover:not(.active) {
+            background: #f0f7ff;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Школа Будущего</span>
+                </a>
+                
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+                    <li><a href="about.html"><i class="fas fa-school"></i> О школе</a></li>
+                    <li><a href="programs.html"><i class="fas fa-book-open"></i> Программы</a></li>
+                    <li><a href="team.html"><i class="fas fa-users"></i> Команда</a></li>
+                    <li><a href="news.html" class="active"><i class="fas fa-newspaper"></i> Новости</a></li>
+                    <li><a href="contacts.html"><i class="fas fa-address-book"></i> Контакты</a></li>
+                    <li><a href="login.html" class="btn-login" id="loginNavBtn"><i class="fas fa-sign-in-alt"></i> Вход</a></li>
+                </ul>
+                
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <div class="container">
+            <h1 class="page-title">Новости и события</h1>
+            <p class="page-subtitle">Будьте в курсе всех событий нашей школы</p>
+            
+            <div class="news-categories">
+                <button class="category-button active" data-category="all">Все новости</button>
+                <button class="category-button" data-category="events">Мероприятия</button>
+                <button class="category-button" data-category="achievements">Достижения</button>
+                <button class="category-button" data-category="parents">Родителям</button>
+                <button class="category-button" data-category="education">Образование</button>
+            </div>
+            
+            <div class="news-grid">
+                <div class="news-card" data-category="events">
+                    <div class="news-image">
+                        <img src="img/lin1.jpg" alt="Фестиваль робототехники">
+                    </div>
+                    <div class="news-content">
+                        <div class="news-meta">
+                            <span><i class="far fa-calendar"></i> 15 марта 2024</span>
+                            <span class="news-category">Мероприятия</span>
+                        </div>
+                        <h3 class="news-title">Фестиваль робототехники "RoboFuture 2024"</h3>
+                        <p class="news-excerpt">
+                            Наши ученики заняли первое место в региональном фестивале робототехники. 
+                            Было представлено 15 уникальных проектов, созданных школьниками.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="news-card" data-category="achievements">
+                    <div class="news-image">
+                        <img src="img/lin5.jpg" alt="Победа в олимпиаде">
+                    </div>
+                    <div class="news-content">
+                        <div class="news-meta">
+                            <span><i class="far fa-calendar"></i> 10 марта 2024</span>
+                            <span class="news-category">Достижения</span>
+                        </div>
+                        <h3 class="news-title">Победа в олимпиаде по программированию</h3>
+                        <p class="news-excerpt">
+                            Ученик 10 класса Иван Петров стал победителем всероссийской олимпиады 
+                            по информатике. Подготовка к соревнованиям заняла 6 месяцев.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="news-card" data-category="parents">
+                    <div class="news-image">
+                        <img src="img/lin6.jpg" alt="День открытых дверей">
+                    </div>
+                    <div class="news-content">
+                        <div class="news-meta">
+                            <span><i class="far fa-calendar"></i> 5 марта 2024</span>
+                            <span class="news-category">Родителям</span>
+                        </div>
+                        <h3 class="news-title">День открытых дверей для родителей</h3>
+                        <p class="news-excerpt">
+                            20 марта состоится день открытых дверей. Родители смогут посетить 
+                            занятия, познакомиться с преподавателями и задать вопросы.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="news-card" data-category="education">
+                    <div class="news-image">
+                        <img src="img/lin3.png" alt="Курс по ИИ">
+                    </div>
+                    <div class="news-content">
+                        <div class="news-meta">
+                            <span><i class="far fa-calendar"></i> 28 февраля 2024</span>
+                            <span class="news-category">Образование</span>
+                        </div>
+                        <h3 class="news-title">Новый курс "Искусственный интеллект для школьников"</h3>
+                        <p class="news-excerpt">
+                            С сентября 2024 года мы запускаем уникальный курс по изучению 
+                            основ искусственного интеллекта и машинного обучения.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="news-card" data-category="events">
+                    <div class="news-image">
+                        <img src="img/lin4.jpg" alt="Выставка детского творчества">
+                    </div>
+                    <div class="news-content">
+                        <div class="news-meta">
+                            <span><i class="far fa-calendar"></i> 20 февраля 2024</span>
+                            <span class="news-category">Мероприятия</span>
+                        </div>
+                        <h3 class="news-title">Выставка детского творчества "Мир глазами детей"</h3>
+                        <p class="news-excerpt">
+                            В нашей школе прошла ежегодная выставка детского творчества. 
+                            Было представлено более 200 работ в различных техниках.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="news-card" data-category="achievements">
+                    <div class="news-image">
+                        <img src="img/lin2.jpg" alt="Изучение китайского языка">
+                    </div>
+                    <div class="news-content">
+                        <div class="news-meta">
+                            <span><i class="far fa-calendar"></i> 15 февраля 2024</span>
+                            <span class="news-category">Достижения</span>
+                        </div>
+                        <h3 class="news-title">Успехи в изучении китайского языка</h3>
+                        <p class="news-excerpt">
+                            5 наших учеников получили сертификаты HSK по китайскому языку. 
+                            Это первый подобный успех в истории нашего города.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="calendar-section">
+                <div class="calendar-header">
+                    <h2>Календарь событий</h2>
+                    <div class="calendar-nav">
+                        <button id="prevMonth"><i class="fas fa-chevron-left"></i></button>
+                        <span id="currentMonth">Март 2024</span>
+                        <button id="nextMonth"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div id="calendar" class="calendar-grid">
+                    <!-- Календарь будет сгенерирован JavaScript -->
+                </div>
+            </div>
+            
+            <div class="pagination">
+                <button class="page-button active">1</button>
+                <button class="page-button">2</button>
+                <button class="page-button">3</button>
+                <button class="page-button"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Школа Будущего</h3>
+                    <p>МБОУ СОШ №256, ЗАТО Фокино</p>
+                    <p>ООО "Школа Будущего"</p>
+                    <p>Лицензия на образовательную деятельность №12345</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Контакты</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> г. Фокино, ул. Школьная, 15</p>
+                    <p><i class="fas fa-phone"></i> +7 (423) 123-45-67</p>
+                    <p><i class="fas fa-envelope"></i> info@school-future.ru</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Быстрые ссылки</h3>
+                    <ul>
+                        <li><a href="about.html">О школе</a></li>
+                        <li><a href="programs.html">Программы</a></li>
+                        <li><a href="news.html">Новости</a></li>
+                        <li><a href="contacts.html">Контакты</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Социальные сети</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-vk"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                    <p class="copyright">© 2024 Школа Будущего. Все права защищены.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Фильтрация новостей
+        document.querySelectorAll('.category-button').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.category-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                const category = this.getAttribute('data-category');
+                
+                document.querySelectorAll('.news-card').forEach(card => {
+                    const cardCategory = card.getAttribute('data-category');
+                    
+                    if (category === 'all' || cardCategory === category) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Генерация календаря
+        function generateCalendar(year, month) {
+            const calendar = document.getElementById('calendar');
+            calendar.innerHTML = '';
+            
+            // Заголовки дней недели
+            const days = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+            days.forEach(day => {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.style.fontWeight = '600';
+                dayElement.textContent = day;
+                calendar.appendChild(dayElement);
+            });
+            
+            // Первый день месяца
+            const firstDay = new Date(year, month, 1);
+            // Последний день месяца
+            const lastDay = new Date(year, month + 1, 0);
+            
+            // Пустые ячейки перед первым днем
+            for (let i = 0; i < (firstDay.getDay() + 6) % 7; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day';
+                calendar.appendChild(emptyDay);
+            }
+            
+            // Дни месяца
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                
+                // Проверяем выходные
+                const currentDate = new Date(year, month, day);
+                if (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
+                    dayElement.classList.add('weekend');
+                }
+                
+                // Добавляем события (пример)
+                if (day === 15 || day === 20 || day === 25) {
+                    dayElement.classList.add('event');
+                    
+                    const eventDiv = document.createElement('div');
+                    eventDiv.className = 'event-item';
+                    eventDiv.textContent = day === 15 ? 'Робототехника' : 
+                                          day === 20 ? 'Родительское собрание' : 
+                                                      'Открытый урок';
+                    dayElement.appendChild(eventDiv);
+                }
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = day;
+                
+                dayElement.prepend(dayNumber);
+                calendar.appendChild(dayElement);
+            }
+        }
+        
+        // Навигация по календарю
+        let currentDate = new Date();
+        updateCalendar();
+        
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            updateCalendar();
+        });
+        
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            updateCalendar();
+        });
+        
+        function updateCalendar() {
+            const months = [
+                'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+                'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+            ];
+            
+            document.getElementById('currentMonth').textContent = 
+                `${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+            
+            generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        }
+    </script>
+    <script src="js/session.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
